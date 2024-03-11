@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34607.119
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-cook.Server", "E-cook.Server\E-cook.Server.csproj", "{578C3201-7A5D-4C58-A9EF-EA052233B518}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "e-cook.client", "e-cook.client\e-cook.client.esproj", "{158AA86C-6EAA-4102-A706-EF086EAA38C8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{578C3201-7A5D-4C58-A9EF-EA052233B518}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{578C3201-7A5D-4C58-A9EF-EA052233B518}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{578C3201-7A5D-4C58-A9EF-EA052233B518}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{578C3201-7A5D-4C58-A9EF-EA052233B518}.Release|Any CPU.Build.0 = Release|Any CPU
+		{158AA86C-6EAA-4102-A706-EF086EAA38C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{158AA86C-6EAA-4102-A706-EF086EAA38C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{158AA86C-6EAA-4102-A706-EF086EAA38C8}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{158AA86C-6EAA-4102-A706-EF086EAA38C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{158AA86C-6EAA-4102-A706-EF086EAA38C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{158AA86C-6EAA-4102-A706-EF086EAA38C8}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {50B936BC-662B-44A1-B1ED-09183F06858B}
+	EndGlobalSection
+EndGlobal
