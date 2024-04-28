@@ -1,16 +1,12 @@
 
-/**
- * @license MIT
- * @author codewithsadee <dmitrosegeda@gmail.com>
- */
 
 
 "use strict";
 
 
 window.ACCESS_POINT = "https://api.edamam.com/api/recipes/v2";
-const /** {String} */ APP_ID = "aaf723f8";
-const /** {String} */ API_KEY = "9f7dc71b1a97617e65275cd840987b91";
+const /** {String} */ APP_ID = "fe5636cd";
+const /** {String} */ API_KEY = "dd28409e8f92ec30880db75cd579f904";
 const /** {String} */ TYPE = "public";
 
 /**
