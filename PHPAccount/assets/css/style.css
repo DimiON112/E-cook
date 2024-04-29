@@ -320,13 +320,15 @@ main {
   height: 1em;
   overflow: hidden;
   font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 24;
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
 }
 
-.section { margin-block-end: var(--section-gap); }
+.section {
+  margin-block-end: var(--section-gap);
+}
 
 .container {
   max-width: 1130px;
@@ -356,9 +358,19 @@ main {
   object-fit: cover;
 }
 
-.section-title { margin-block-end: 12px; }
+.section-title {
+  margin-block-end: 12px;
+}
 
-
+.snackbar-container {
+  position: fixed;
+  bottom: calc(var(--mobile-nav-height) + 16px);
+  left: 16px;
+  right: 16px;
+  display: grid;
+  gap: 8px;
+  z-index: 4;
+}
 
 .section {
   margin-block-end: var(--section-gap);
@@ -371,7 +383,9 @@ main {
   padding-inline: 16px;
 }
 
-.section { margin-block-end: var(--section-gap); }
+.section {
+  margin-block-end: var(--section-gap);
+}
 
 .container {
   max-width: 1130px;
@@ -477,6 +491,37 @@ main {
   background-color: var(--primary-container);
 }
 
+.snackbar {
+  height: 48px;
+  width: 100%;
+  background-color: var(--on-background-variant);
+  color: var(--background);
+  padding-inline: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: var(--radius-4);
+  box-shadow: var(--shadow-1);
+  animation: snackbar 3s var(--transition-timing-function) forwards;
+}
+
+@keyframes snackbar {
+  0% {
+    height: 0;
+    opacity: 0;
+  }
+
+  10%,
+  95% {
+    height: 48px;
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
 /*---HEADER---*/
 .navbar,
 .header .btn-primary {
@@ -509,7 +554,7 @@ main {
 
 
 
-  /*---MOBILE NAV---*/
+/*---MOBILE NAV---*/
 
 
 .mobile-nav {
@@ -559,7 +604,7 @@ main {
 }
 
 
- /*---HERO---*/
+/*---HERO---*/
 
 
 .hero {
@@ -646,7 +691,7 @@ main {
  * Secondary tab
  */
 
- .tab-list {
+.tab-list {
   display: flex;
   color: var(--on-background-variant);
   box-shadow: inset 0 -1px 0 var(--outline);
@@ -654,7 +699,9 @@ main {
   scrollbar-width: none;
 }
 
-.tab-list::-webkit-scrollbar { display: none; }
+.tab-list::-webkit-scrollbar {
+  display: none;
+}
 
 .tab-btn {
   height: 48px;
@@ -678,14 +725,19 @@ main {
 /**
  * Skeleton
  */
- .skeleton {
+.skeleton {
   background-color: var(--on-background);
   animation: skeleton-loading 500ms linear infinite alternate;
 }
 
 @keyframes skeleton-loading {
-  0% { opacity: 0.2; }
-  100% { opacity: 0.4; }
+  0% {
+    opacity: 0.2;
+  }
+
+  100% {
+    opacity: 0.4;
+  }
 }
 
 .skeleton-card .card-banner {
@@ -709,7 +761,7 @@ main {
  * Card
  */
 
- .card {
+.card {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -727,6 +779,7 @@ main {
     transform: translateY(30px);
     opacity: 0;
   }
+
   100% {
     transform: translateY(0);
     opacity: 1;
@@ -755,7 +808,9 @@ main {
   transition: var(--transition-short);
 }
 
-.card-link:where(:hover, :focus-visible) { color: var(--primary); }
+.card-link:where(:hover, :focus-visible) {
+  color: var(--primary);
+}
 
 .card-link::before {
   content: "";
@@ -768,16 +823,26 @@ main {
   align-items: center;
 }
 
-.card .meta-wrapper { justify-content: space-between; }
+.card .meta-wrapper {
+  justify-content: space-between;
+}
 
-.card .meta-item { gap: 8px; }
+.card .meta-item {
+  gap: 8px;
+}
 
-.card .meta-item .material-symbols-outlined { font-size: 1.8rem; }
+.card .meta-item .material-symbols-outlined {
+  font-size: 1.8rem;
+}
 
 .saved .bookmark-add,
-.removed .bookmark { display: none; }
+.removed .bookmark {
+  display: none;
+}
 
-.saved .bookmark { font-variation-settings: "FILL" 1; }
+.saved .bookmark {
+  font-variation-settings: "FILL" 1;
+}
 
 
 
@@ -794,7 +859,9 @@ main {
   z-index: 1;
 }
 
-.tab-panel[hidden] { display: none; }
+.tab-panel[hidden] {
+  display: none;
+}
 
 .tab .btn-secondary {
   max-width: 100%;
@@ -803,7 +870,7 @@ main {
 
 
 
- /*--- RECIPE SLIDER---*/
+/*--- RECIPE SLIDER---*/
 
 
 .slider {
@@ -814,9 +881,13 @@ main {
   padding-block-end: 5px;
 }
 
-.slider::-webkit-scrollbar { height: 4px; }
+.slider::-webkit-scrollbar {
+  height: 4px;
+}
 
-.slider::-webkit-scrollbar-thumb { background-color: transparent; }
+.slider::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
 
 .slider:where(:hover, :focus-within)::-webkit-scrollbar-thumb {
   background-color: var(--alpha-10);
@@ -864,7 +935,9 @@ main {
 /*---TAG---*/
 
 
-.tag { text-align: center; }
+.tag {
+  text-align: center;
+}
 
 .tag .section-text {
   max-width: 50ch;
@@ -883,7 +956,9 @@ main {
 
 /*---Footer---*/
 
-.footer .logo { display: none; }
+.footer .logo {
+  display: none;
+}
 
 .footer {
   padding: 16px;
@@ -895,6 +970,10 @@ main {
   border-block-start: 1px solid var(--outline);
 }
 
-.copyright { opacity: 0.8; }
+.copyright {
+  opacity: 0.8;
+}
 
-.footer .edamam img { width: 180px; }
+.footer .edamam img {
+  width: 180px;
+}
