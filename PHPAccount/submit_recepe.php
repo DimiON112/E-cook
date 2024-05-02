@@ -18,9 +18,10 @@ if ($conn->connect_error) {
 $recipeName = $_POST['recipeName'];
 $description = $_POST['description'];
 $time = $_POST['time'];
+$image_url = $_POST['image_url'];
 
 $sql = "INSERT INTO recepe (title, description, admin_id, time, image_url) 
-        VALUES ('$recipeName', '$description', 1, '$time', 'image_url_value')";
+        VALUES ('$recipeName', '$description', 1, '$time', '$image_url')";
 
 if ($conn->query($sql) === TRUE) {
     echo "Recipe saved successfully";
