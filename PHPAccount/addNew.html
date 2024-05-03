@@ -83,9 +83,40 @@
       <label for="time">image_url</label>
       <input type="text" id="image_url" name="image_url" required>
 
+
+      <div id="ingredientsContainer">
+        <!-- Первая ячейка для ингредиента -->
+        <div class="ingredientRow">
+            <label for="ingredient1">item 1:</label>
+            <input type="text" id="ingredient1" name="ingredient[]" required>
+        </div>
+    </div>
+    
+    <button type="button" id="addIngredientButton">add item</button>
+
       <input type="submit" value="save">
   </form>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addIngredientButton = document.getElementById('addIngredientButton');
+    const ingredientsContainer = document.getElementById('ingredientsContainer');
+    let ingredientIndex = 1;
+
+    addIngredientButton.addEventListener('click', function() {
+        ingredientIndex++;
+
+        const newIngredientRow = document.createElement('div');
+        newIngredientRow.classList.add('ingredientRow');
+        newIngredientRow.innerHTML = `
+            <label for="ingredient${ingredientIndex}">Ингредиент ${ingredientIndex}:</label>
+            <input type="text" id="ingredient${ingredientIndex}" name="ingredient[]" required>
+        `;
+
+        ingredientsContainer.appendChild(newIngredientRow);
+    });
+});
+</script>
 
 </body>
 </html>

@@ -29,6 +29,18 @@ if ($conn->query($sql) === TRUE) {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }
 
+//добавление ингридиета 
+$ingredients = $_POST['ingredient'];
+
+// Подготовка и выполнение SQL-запроса для вставки каждого ингредиента в базу данных
+foreach ($ingredients as $ingredient) {
+    $ingredient = $conn->real_escape_string($ingredient); // Защита от SQL-инъекций
+    $sql = "INSERT INTO item (name, recepe_id) VALUES ('$ingredient', (select max(id) from recepe))";
+    if ($conn->query($sql) !== TRUE) {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+}
+
 // Закрытие подключения к базе данных
 $conn->close();
 ?>
