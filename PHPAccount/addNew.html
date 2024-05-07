@@ -64,38 +64,48 @@
         </a>
     
       </header>
-    <!-- Ваш контент здесь -->
+ 
 
+    <p style="font-weight: bold; font-size: 3rem; text-align: center;">You can add a new recipe :)</p>
+    <br>
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <b1>You can add new recipe</b1>
 
+ 
 
-    <form action="submit_recepe.php" method="post">
-      <label for="recipeName">the name of the recipe:</label>
-      <input type="text" id="recipeName" name="recipeName" required>
-        
-      <label for="description">description</label>
-      <input type="text" id="description" name="description" required>
-  
-      <label for="time">time</label>
-      <input type="text" id="time" name="time" required>
-
-      <label for="time">image_url</label>
-      <input type="text" id="image_url" name="image_url" required>
-
-
-      <div id="ingredientsContainer">
-        <!-- Первая ячейка для ингредиента -->
-        <div class="ingredientRow">
-            <label for="ingredient1">item 1:</label>
-            <input type="text" id="ingredient1" name="ingredient[]" required>
-        </div>
-    </div>
+    <section class="recipe-form-section">
     
-    <button type="button" id="addIngredientButton">add item</button>
+      <form action="submit_recipe.php" method="post" class="recipe-form">
+          <div class="form-group">
+            
+              <label for="recipeName">Recipe Name:</label>
+              <input type="text" id="recipeName" name="recipeName" required>
+          </div>
+          <div class="form-group">
+              <label for="description">Description:</label>
+              <textarea id="description" name="description" required></textarea>
+          </div>
+          <div class="form-group">
+              <label for="time">Preparation Time:</label>
+              <input type="text" id="time" name="time" required>
+          </div>
+          <div class="form-group">
+              <label for="image_url">Image URL:</label>
+              <input type="text" id="image_url" name="image_url" required>
+          </div>
+          <div class="ingredients-container" id="ingredientsContainer">
+              <div class="ingredient-row">
+                  <label for="ingredient1">Ingredient 1:</label>
+                  <input type="text" id="ingredient1" name="ingredient[]" required>
+              </div>
+          </div>
+          <button type="button" id="addIngredientButton" class="btn">Add Ingredient</button>
+          <br>
+          <br>
+          <input type="submit" value="Save Recipe" class="btn btn-primary" style="display: block; margin: 0 auto; padding: 30px 50px; font-size: 20px;line-height: 5px;">
 
-      <input type="submit" value="save">
-  </form>
+
+      </form>
+  </section>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -109,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const newIngredientRow = document.createElement('div');
         newIngredientRow.classList.add('ingredientRow');
         newIngredientRow.innerHTML = `
-            <label for="ingredient${ingredientIndex}">Ингредиент ${ingredientIndex}:</label>
+            <label for="ingredient${ingredientIndex}">Ingredient ${ingredientIndex}:</label>
             <input type="text" id="ingredient${ingredientIndex}" name="ingredient[]" required>
         `;
 

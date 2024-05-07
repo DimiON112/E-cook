@@ -848,7 +848,6 @@ main {
 
 /*---TAB---*/
 
-
 .tab .tab-list {
   background-color: var(--background);
   position: sticky;
@@ -1910,3 +1909,66 @@ main {
   padding-inline: 4px;
   border-radius: var(--radius-pill);
 }
+
+/*--NEW RECIEPE--*/
+
+
+.recipe-form {
+  width: 100%;
+  max-width: 800px;
+  padding: 40px;
+  background-color: var(--light-background);
+  border-radius: var(--radius-8);
+  box-shadow: var(--shadow-2);
+  box-sizing: border-box;
+  text-align: center;
+  margin: 0 auto; 
+}
+
+.recipe-form h1 {
+  font-size: var(--fs-display-medium); 
+  margin-bottom: 20px; 
+}
+
+.recipe-form label {
+  font-size: var(--fs-label-large); 
+}
+
+.recipe-form input[type="text"],
+.recipe-form textarea {
+  font-size: var(--fs-body-large); 
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid var(--light-outline);
+  border-radius: var(--radius-4);
+}
+
+.recipe-form button {
+  font-size: var(--fs-title-medium); 
+  padding: 15px 40px; 
+  border: none;
+  border-radius: var(--radius-4);
+  background-color: var(--light-primary);
+  color: var(--white);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.recipe-form button:hover {
+  background-color: var(--light-primary-hover);
+}
+
+.form-group{
+  background-color: var(--background);
+}
+
+ .ingredients-container{
+  background-color: var(--background);
+}
+ 
+.recipe-form
+{
+  background-color: var(--background);
+}
+
