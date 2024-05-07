@@ -1,8 +1,5 @@
 "use strict";
 
-/**
- * Import
- */
 
 import { fetchData } from "./api.js";
 import { getTime } from "./module.js";
