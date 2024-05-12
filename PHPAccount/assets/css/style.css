@@ -1972,3 +1972,14 @@ main {
   background-color: var(--background);
 }
 
+.recepe-card 
+{
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px;
+  width: 200px; /* Ширина плитки */
+  display: inline-block;
+  vertical-align: top;
+  box-sizing: border-box;
+}
