@@ -71,18 +71,18 @@
     </header>
     
     <h1>Данные из базы данных:</h1>
-    <ul id="dataList"></ul>
+    <ul id="recipeList"></ul>
     <script>
         // Запрос данных из PHP скрипта
         fetch('customPrzepisy.php')
             .then(response => response.json())
             .then(data => {
                 // Отображение данных на странице
-                const dataList = document.getElementById('dataList');
-                data.forEach(item => {
+                const recipeList = document.getElementById('recipeList');
+                data.forEach(recipe => {
                     const listItem = document.createElement('li');
-                    listItem.textContent = item;
-                    dataList.appendChild(listItem);
+                    listItem.textContent = recipe;
+                    recipeList.appendChild(listItem);
                 });
             })
             .catch(error => console.error('Ошибка получения данных:', error));
