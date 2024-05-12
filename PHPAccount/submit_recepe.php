@@ -25,6 +25,12 @@ $sql = "INSERT INTO recepe (title, description, admin_id, time, image_url)
 
 if ($conn->query($sql) === TRUE) {
     echo "Recipe saved successfully";
+<<<<<<< HEAD
+=======
+
+    echo '<li><a href="/PHPAccount/" class="navbar-link title-small has-state active">Home</a></li>';
+
+>>>>>>> be886ef96f758097380350ca20567d27717a430b
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }
