@@ -69,20 +69,39 @@
         </a>
     
     </header>
+
+    <style>
+      /* Стили для плиток */
+      .recipe-card {
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          padding: 20px;
+          margin: 10px;
+          width: 300px; /* Ширина плитки */
+          display: inline-block;
+          vertical-align: top;
+          box-sizing: border-box;
+      }
+  </style>
     
     <h1>Данные из базы данных:</h1>
-    <ul id="recipeList"></ul>
+    <div id="recipeContainer"></div>
+
+
+    
     <script>
         // Запрос данных из PHP скрипта
         fetch('customPrzepisy.php')
             .then(response => response.json())
             .then(data => {
                 // Отображение данных на странице
-                const recipeList = document.getElementById('recipeList');
+                const recipeContainer = document.getElementById('recipeContainer');
                 data.forEach(recipe => {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = recipe;
-                    recipeList.appendChild(listItem);
+                    // Создание плитки для каждого рецепта
+                    const recipeCard = document.createElement('div');
+                    recipeCard.classList.add('recipe-card');
+                    recipeCard.textContent = recipe;
+                    recipeContainer.appendChild(recipeCard);
                 });
             })
             .catch(error => console.error('Ошибка получения данных:', error));
