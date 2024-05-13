@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body>
+
+
 <?php
 // Подключение к базе данных
 $servername = "localhost";
@@ -45,3 +55,7 @@ foreach ($ingredients as $ingredient) {
 // Закрытие подключения к базе данных
 $conn->close();
 ?>
+
+
+</body>
+</html>
