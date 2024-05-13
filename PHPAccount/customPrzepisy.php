@@ -12,13 +12,14 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
 // Запрос к базе данных
 $result = $conn->query("SELECT * FROM recepe");
 
 // Сохранение данных в массив
 $data = array();
 while ($row = $result->fetch_assoc()) {
-    $data[] = $row["title"];
+    $data[] = $row; // Сохраняем всю информацию о рецепте, а не только заголовок
 }
 
 // Закрытие соединения

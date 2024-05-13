@@ -69,8 +69,14 @@
         </a>
     
     </header>
-
     <style>
+      /* Стили для контейнера плиток */
+      #recipeContainer {
+          display: flex; /* Устанавливаем гибкую строку */
+          flex-wrap: wrap; /* Добавляем перенос на новую строку, если элементы не помещаются */
+          justify-content: flex-start; /* Выравниваем плитки в начале строки */
+      }
+  
       /* Стили для плиток */
       .recipe-card {
           border: 1px solid #ccc;
@@ -78,33 +84,47 @@
           padding: 20px;
           margin: 10px;
           width: 300px; /* Ширина плитки */
-          display: inline-block;
-          vertical-align: top;
           box-sizing: border-box;
       }
   </style>
+  
+
     
     <h1>Данные из базы данных:</h1>
     <div id="recipeContainer"></div>
 
 
-    
-    <script>
-        // Запрос данных из PHP скрипта
-        fetch('customPrzepisy.php')
-            .then(response => response.json())
-            .then(data => {
-                // Отображение данных на странице
-                const recipeContainer = document.getElementById('recipeContainer');
-                data.forEach(recipe => {
-                    // Создание плитки для каждого рецепта
-                    const recipeCard = document.createElement('div');
-                    recipeCard.classList.add('recipe-card');
-                    recipeCard.textContent = recipe;
-                    recipeContainer.appendChild(recipeCard);
-                });
-            })
-            .catch(error => console.error('Ошибка получения данных:', error));
-    </script>
+<script>
+    // Запрос данных из PHP скрипта
+    fetch('customPrzepisy.php')
+        .then(response => response.json())
+        .then(data => {
+            // Отображение данных на странице
+            const recipeContainer = document.getElementById('recipeContainer');
+            data.forEach(recipe => {
+                // Создание ссылки для каждого рецепта
+                const recipeLink = document.createElement('a');
+                recipeLink.href = 'recipePage.php?id=' + recipe.id; // Предполагается, что у рецепта есть свойство "id"
+                
+                // Создание плитки для каждого рецепта
+                const recipeCard = document.createElement('div');
+                recipeCard.classList.add('recipe-card');
+                
+                // Установка текста плитки как название рецепта из базы данных
+                recipeCard.textContent = recipe.title; // Предполагается, что название рецепта находится в столбце "title"
+                
+                // Добавление плитки внутрь ссылки
+                recipeLink.appendChild(recipeCard);
+                
+                // Добавление ссылки (вместе с плиткой) в контейнер
+                recipeContainer.appendChild(recipeLink);
+            });
+        })
+        .catch(error => console.error('Ошибка получения данных:', error));
+</script>
+
+
+
+
 </body>
 </html>
