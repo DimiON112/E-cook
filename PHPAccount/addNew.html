@@ -31,7 +31,13 @@
 
 <body>
 
-  <header class="header" data-header>
+<?php
+function isActive($page) {
+    return basename($_SERVER['PHP_SELF']) == $page ? 'active' : '';
+}
+?>
+
+<header class="header" data-header>
 
     <a href="/" class="logo">
       <img src="./assets/images/logo-light.svg" width="156" height="32" alt="E-cook" class="logo-light">
@@ -42,11 +48,23 @@
       <ul class="navbar-list">
 
         <li>
-          <a href="/PHPAccount/" class="navbar-link title-small has-state active">Home</a>
+          <a href="./index.html" class="navbar-link title-small has-state <?php echo isActive('index.html'); ?>">Home</a>
         </li>
 
         <li>
-          <a href="./recipes.html" class="navbar-link title-small has-state">Recipes</a>
+          <a href="./recipes.html" class="navbar-link title-small has-state <?php echo isActive('recipes.html'); ?>">Recipes</a>
+        </li>
+
+        <li>
+          <a href="./customPrzepisy.html" class="navbar-link title-small has-state <?php echo isActive('customPrzepisy.html'); ?>">Custom</a>
+        </li>
+
+        <li>
+          <a href="./addNew.html" class="navbar-link title-small has-state <?php echo isActive('addNew.html'); ?>">Add new</a>
+        </li>
+
+        <li>
+          <a href="./recipePage.php" class="navbar-link title-small has-state <?php echo isActive('recipePage.php'); ?>">My Recipes</a>
         </li>
 
       </ul>
@@ -55,81 +73,79 @@
     <button class="icon-btn theme-switch has-state" aria-pressed="false" aria-label="Toggle light and dark theme"
       data-theme-btn>
       <span class="material-symbols-outlined light-icon" aria-hidden="true">light_mode</span>
-
       <span class="material-symbols-outlined dark-icon" aria-hidden="true">dark_mode</span>
     </button>
 
     <a href="./saved-recipes.html" class="btn btn-primary has-icon">
       <span class="material-symbols-outlined" aria-hidden="true">book</span>
-
       <span class="span">Saved Recipes</span>
     </a>
 
-  </header>
+</header>
 
 
-  <p style="font-weight: bold; font-size: 3rem; text-align: center;">You can add a new recipe :)</p>
-  <br>
-  <link rel="stylesheet" type="text/css" href="styles.css">
+<p style="font-weight: bold; font-size: 3rem; text-align: center;">You can add a new recipe :)</p>
+<br>
+<link rel="stylesheet" type="text/css" href="styles.css">
 
 
 
-  <section class="recipe-form-section">
+<section class="recipe-form-section">
 
-    <form action="submit_recepe.php" method="post" class="recipe-form">
-      <div class="form-group">
+  <form action="submit_recepe.php" method="post" class="recipe-form">
+    <div class="form-group">
 
-        <label for="recipeName">Recipe Name:</label>
-        <input type="text" id="recipeName" name="recipeName" required>
+      <label for="recipeName">Recipe Name:</label>
+      <input type="text" id="recipeName" name="recipeName" required>
+    </div>
+    <div class="form-group">
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" required></textarea>
+    </div>
+    <div class="form-group">
+      <label for="time">Preparation Time:</label>
+      <input type="text" id="time" name="time" required>
+    </div>
+    <div class="form-group">
+      <label for="image_url">Image URL:</label>
+      <input type="text" id="image_url" name="image_url" required>
+    </div>
+    <div class="ingredients-container" id="ingredientsContainer">
+      <div class="ingredient-row">
+        <label for="ingredient1">Ingredient 1:</label>
+        <input type="text" id="ingredient1" name="ingredient[]" required>
       </div>
-      <div class="form-group">
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" required></textarea>
-      </div>
-      <div class="form-group">
-        <label for="time">Preparation Time:</label>
-        <input type="text" id="time" name="time" required>
-      </div>
-      <div class="form-group">
-        <label for="image_url">Image URL:</label>
-        <input type="text" id="image_url" name="image_url" required>
-      </div>
-      <div class="ingredients-container" id="ingredientsContainer">
-        <div class="ingredient-row">
-          <label for="ingredient1">Ingredient 1:</label>
-          <input type="text" id="ingredient1" name="ingredient[]" required>
-        </div>
-      </div>
-      <button type="button" id="addIngredientButton" class="btn">Add Ingredient</button>
-      <br>
-      <br>
-      <input type="submit" value="Save Recipe" class="btn btn-primary"
-        style="display: block; margin: 0 auto; padding: 30px 50px; font-size: 20px;line-height: 5px;">
+    </div>
+    <button type="button" id="addIngredientButton" class="btn">Add Ingredient</button>
+    <br>
+    <br>
+    <input type="submit" value="Save Recipe" class="btn btn-primary"
+      style="display: block; margin: 0 auto; padding: 30px 50px; font-size: 20px;line-height: 5px;">
 
 
-    </form>
-  </section>
+  </form>
+</section>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const addIngredientButton = document.getElementById('addIngredientButton');
-      const ingredientsContainer = document.getElementById('ingredientsContainer');
-      let ingredientIndex = 1;
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const addIngredientButton = document.getElementById('addIngredientButton');
+    const ingredientsContainer = document.getElementById('ingredientsContainer');
+    let ingredientIndex = 1;
 
-      addIngredientButton.addEventListener('click', function () {
-        ingredientIndex++;
+    addIngredientButton.addEventListener('click', function () {
+      ingredientIndex++;
 
-        const newIngredientRow = document.createElement('div');
-        newIngredientRow.classList.add('ingredientRow');
-        newIngredientRow.innerHTML = `
-            <label for="ingredient${ingredientIndex}">Ingredient ${ingredientIndex}:</label>
-            <input type="text" id="ingredient${ingredientIndex}" name="ingredient[]" required>
-        `;
+      const newIngredientRow = document.createElement('div');
+      newIngredientRow.classList.add('ingredientRow');
+      newIngredientRow.innerHTML = `
+          <label for="ingredient${ingredientIndex}">Ingredient ${ingredientIndex}:</label>
+          <input type="text" id="ingredient${ingredientIndex}" name="ingredient[]" required>
+      `;
 
-        ingredientsContainer.appendChild(newIngredientRow);
-      });
+      ingredientsContainer.appendChild(newIngredientRow);
     });
-  </script>
+  });
+</script>
 
 </body>
 
