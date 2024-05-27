@@ -52,70 +52,73 @@ function isActive($page) {
     </a>
 </header>
 
-
-
 <div class="container">
-  <h1 class="recipe-title">All Recipes</h1>
+  <h1 class="recipe-title"></h1>
   <div class="recipes">
     <?php
+    // Подключение к базе данных
     $servername = "localhost";
     $username = "root";
-    $password = "";
+    $password = ""; // Пароль по умолчанию пустой
     $dbname = "login_db";
 
     $conn = new mysqli($servername, $username, $password, $dbname);
 
+    // Проверка соединения
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
 
-    $recipe_query = "SELECT * FROM recepe";
-    $recipe_result = $conn->query($recipe_query);
-    if ($recipe_result->num_rows > 0) {
-        while ($recipe = $recipe_result->fetch_assoc()) {
-            $recipe_id = $recipe['id'];
-            $ingredient_query = "SELECT COUNT(*) as ingredient_count FROM item WHERE recepe_id = $recipe_id";
-            $ingredient_result = $conn->query($ingredient_query);
-            $ingredient_count = $ingredient_result->fetch_assoc()['ingredient_count'];
+    // Получение ID рецепта из параметров запроса
+    $recipeId = $_GET['id'];
 
-            echo '<article class="article container detail-page">';
-            echo '<div class="detail-banner">';
-            echo '<img src="' . $recipe['image_url'] . '" alt="Recipe Image" class="recipe-image">';
-            echo '</div>';
-            echo '<div class="detail-content">';
-            echo '<div class="title-wrapper">';
-            echo '<h2 class="title-large">' . $recipe['title'] . '</h2>';
-            echo '</div>';
-            echo '<p class="detail-author">by me :)</p>';
-            echo '<div class="detail-stats">';
-            echo '<div class="stats-item"><span class="label-medium">Ingredients</span><span>' . $ingredient_count . '</span></div>';
-            echo '<div class="stats-item"><span class="label-medium">Minutes</span><span>' . $recipe['time'] . '</span></div>';
-            echo '<div class="stats-item"><span class="label-medium">Calories</span><span>274</span></div>';
-            echo '</div>';
-            echo '<div class="tag-list">';
-            echo '</div>';
-            echo '<div class="ingr-title"><span class="label-large">Ingredients</span></div>';
-            echo '<ul class="ingr-list">';
-            
-            $ingredient_query = "SELECT name FROM item WHERE recepe_id = $recipe_id";
-            $ingredient_result = $conn->query($ingredient_query);
-            if ($ingredient_result->num_rows > 0) {
-                while ($ingredient = $ingredient_result->fetch_assoc()) {
-                    echo '<li class="ingr-item">' . $ingredient['name'] . '</li>';
-                }
-            }
-            echo '</ul>';
-            echo '</div>';
-            echo '</article>';
+    // Запрос данных о рецепте из базы данных
+    $sql = "SELECT * FROM recepe WHERE id = $recipeId"; // Предположим, что таблица с рецептами называется "recepe"
+    $result = $conn->query($sql);
+
+    // Если данные найдены, отобразите их
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $recipeTitle = $row["title"];
+        $recipeDescription = $row["description"];
+        $imageUrl = $row["image_url"]; // Получение URL изображения
+        
+        // Вывод информации о рецепте на страницу
+        echo "<h1>$recipeTitle</h1>";
+        echo "<p>$recipeDescription</p>";
+        echo "<img src='$imageUrl' alt='$recipeTitle' class='recipe-image'>"; // Вывод изображения
+    } else {
+        echo "Рецепт не найден";
+    }
+    
+
+    // Запрос данных о деталях рецепта из таблицы item по recipe_id
+    $sql = "SELECT * FROM item WHERE recepe_id = $recipeId"; // Предположим, что таблица с деталями рецептов называется "item"
+    $result = $conn->query($sql);
+
+    // Если данные найдены, отобразите их
+    if ($result->num_rows > 0) {
+        // Вывод информации о рецепте на страницу
+        while($row = $result->fetch_assoc()) {
+            // Вывод данных о деталях рецепта
+            echo "<p>" . $row["name"] . "</p>"; // Замените "name" на фактическое название столбца в вашей таблице
         }
     } else {
-        echo "<p>No recipes found.</p>";
+        echo "Данные о деталях рецепта не найдены";
     }
 
     $conn->close();
     ?>
   </div>
 </div>
-</body>
+<style>
+    .recipe-image {
+      width: 600px; /* Установите нужные значения ширины */
+      height: 350px; /* Установите нужные значения высоты */
+      object-fit: cover; /* Сохранение пропорций и обрезка по необходимости */
+    }
+  </style>
+    <button onclick="window.location.href='./addNew.html';">edit</button>
 
+</body>
 </html>
