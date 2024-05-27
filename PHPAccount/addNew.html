@@ -6,10 +6,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>custom</title>
+  <title>Add new</title>
   <meta name="title" content="E-cook - Cooking made easy.">
   <meta name="description" content="This is a recipe application made by codewithsadee">
-
 
   <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
 
@@ -27,18 +26,26 @@
 
   <script src="./assets/js/global.js" type="module"></script>
   <script src="./assets/js/home.js" type="module"></script>
+  <style>
+    .navbar-link.active {
+      position: relative;
+      /* Orange color for the active tab */
+    }
+    .navbar-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; /* Adjust the position as needed */
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: 1px #ff6f61; /* Orange line for the active tab */
+    }
+  </style>
 </head>
 
 <body>
 
-<?php
-function isActive($page) {
-    return basename($_SERVER['PHP_SELF']) == $page ? 'active' : '';
-}
-?>
-
 <header class="header" data-header>
-
     <a href="/" class="logo">
       <img src="./assets/images/logo-light.svg" width="156" height="32" alt="E-cook" class="logo-light">
       <img src="./assets/images/logo-dark.svg" width="156" height="32" alt="E-cook" class="logo-dark">
@@ -46,27 +53,18 @@ function isActive($page) {
 
     <nav class="navbar">
       <ul class="navbar-list">
-
         <li>
-          <a href="./index.html" class="navbar-link title-small has-state <?php echo isActive('index.html'); ?>">Home</a>
+          <a href="./index.html" class="navbar-link title-small has-state">Home</a>
         </li>
-
         <li>
-          <a href="./recipes.html" class="navbar-link title-small has-state <?php echo isActive('recipes.html'); ?>">Recipes</a>
+          <a href="./recipes.html" class="navbar-link title-small has-state">Recipes</a>
         </li>
-
         <li>
-          <a href="./customPrzepisy.html" class="navbar-link title-small has-state <?php echo isActive('customPrzepisy.html'); ?>">Custom</a>
+          <a href="./customPrzepisy.html" class="navbar-link title-small has-state">My recepies</a>
         </li>
-
         <li>
-          <a href="./addNew.html" class="navbar-link title-small has-state <?php echo isActive('addNew.html'); ?>">Add new</a>
+          <a href="./addNew.html" class="navbar-link title-small has-state active">Add new</a>
         </li>
-
-        <li>
-          <a href="./recipePage.php" class="navbar-link title-small has-state <?php echo isActive('recipePage.php'); ?>">My Recipes</a>
-        </li>
-
       </ul>
     </nav>
 
@@ -88,13 +86,9 @@ function isActive($page) {
 <br>
 <link rel="stylesheet" type="text/css" href="styles.css">
 
-
-
 <section class="recipe-form-section">
-
   <form action="submit_recepe.php" method="post" class="recipe-form">
     <div class="form-group">
-
       <label for="recipeName">Recipe Name:</label>
       <input type="text" id="recipeName" name="recipeName" required>
     </div>
@@ -120,9 +114,7 @@ function isActive($page) {
     <br>
     <br>
     <input type="submit" value="Save Recipe" class="btn btn-primary"
-      style="display: block; margin: 0 auto; padding: 30px 50px; font-size: 20px;line-height: 5px;">
-
-
+      style="display: block; margin: 0 auto; padding: 30px 50px; font-size: 20px; line-height: 5px;">
   </form>
 </section>
 
@@ -134,19 +126,16 @@ function isActive($page) {
 
     addIngredientButton.addEventListener('click', function () {
       ingredientIndex++;
-
       const newIngredientRow = document.createElement('div');
       newIngredientRow.classList.add('ingredientRow');
       newIngredientRow.innerHTML = `
           <label for="ingredient${ingredientIndex}">Ingredient ${ingredientIndex}:</label>
           <input type="text" id="ingredient${ingredientIndex}" name="ingredient[]" required>
       `;
-
       ingredientsContainer.appendChild(newIngredientRow);
     });
   });
 </script>
 
 </body>
-
 </html>

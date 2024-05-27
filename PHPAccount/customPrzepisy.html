@@ -1,130 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>custom</title>
+  <title>My recipes</title>
   <meta name="title" content="E-cook - Cooking made easy.">
   <meta name="description" content="This is a recipe application made by codewithsadee">
-
-
   <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
-
-  <script src="./assets/js/theme.js"></script>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Serif+Display&display=swap"
-    rel="stylesheet">
-
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0" />
-
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0" />
   <link rel="stylesheet" href="./assets/css/style.css">
+  <style>
+    :root {
+      --background-color: #1c1c1c;
+      --text-color: #ffffff;
+      --item-background-color: #333;
+      --item-text-color: #fff;
+    }
 
-  <script src="./assets/js/global.js" type="module"></script>
-  <script src="./assets/js/home.js" type="module"></script>
-</head>
-<body>
-    <header class="header" data-header>
+    [data-theme="light"] {
+      --background-color: #ffffff;
+      --text-color: #000000;
+      --item-background-color: #f0f0f0;
+      --item-text-color: #000;
+    }
 
-        <a href="/" class="logo">
-          <img src="./assets/images/logo-light.svg" width="156" height="32" alt="E-cook" class="logo-light">
-          <img src="./assets/images/logo-dark.svg" width="156" height="32" alt="E-cook" class="logo-dark">
-        </a>
-    
-        <nav class="navbar">
-          <ul class="navbar-list">
-    
-            <li>
-              <a href="/" class="navbar-link title-small has-state active">Home</a>
-            </li>
-    
-            <li>
-              <a href="./recipes.html" class="navbar-link title-small has-state">Recipes</a>
-            </li>
-            <li>
-                <a href="customPrzepisy.html" class="navbar-link title-small has-state">Custom</a>
-              </li>
-              <li>
-                <a href="addNew.html" class="navbar-link title-small has-state">Add new</a>
-              </li>
-    
-          </ul>
-        </nav>
-    
-        <button class="icon-btn theme-switch has-state" aria-pressed="false" aria-label="Toggle light and dark theme"
-          data-theme-btn>
-          <span class="material-symbols-outlined light-icon" aria-hidden="true">light_mode</span>
-    
-          <span class="material-symbols-outlined dark-icon" aria-hidden="true">dark_mode</span>
-        </button>
-    
-        <a href="./saved-recipes.html" class="btn btn-primary has-icon">
-          <span class="material-symbols-outlined" aria-hidden="true">book</span>
-    
-          <span class="span">Saved Recipes</span>
-        </a>
-    
-    </header>
-    <style>
-      /* Стили для контейнера плиток */
-      #recipeContainer {
-          display: flex; /* Устанавливаем гибкую строку */
-          flex-wrap: wrap; /* Добавляем перенос на новую строку, если элементы не помещаются */
-          justify-content: flex-start; /* Выравниваем плитки в начале строки */
-      }
-  
-      /* Стили для плиток */
-      .recipe-card {
-          border: 1px solid #ccc;
-          border-radius: 5px;
-          padding: 20px;
-          margin: 10px;
-          width: 300px; /* Ширина плитки */
-          box-sizing: border-box;
-      }
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+    }
+
+    .header, .navbar, .navbar-link {
+      background-color: var(--background-color);
+      color: var(--text-color);
+    }
+
+    .database-data {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .data-item {
+      background-color: var(--item-background-color);
+      color: var(--item-text-color);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease;
+    }
+    .data-item:hover {
+      transform: translateY(-10px);
+    }
+    .data-item img {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .data-title {
+      margin-top: 10px;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: var(--item-text-color);
+    }
+    .data-time {
+      display: flex;
+      align-items: center;
+      margin-top: 5px;
+      font-size: 0.9em;
+      color: var(--item-text-color);
+    }
+    .data-time .material-symbols-outlined {
+      font-size: 1em;
+      margin-right: 5px;
+    }
+    .data-link {
+      text-decoration: none;
+      color: inherit;
+    }
+    .navbar-link.active {
+      border-bottom:  #ff6f61; /* Orange line for the active tab */
+    }
   </style>
-  
+</head>
 
-    
-    <h1>Данные из базы данных:</h1>
-    <div id="recipeContainer"></div>
-
-
-<script>
-    // Запрос данных из PHP скрипта
+<body>
+  <header class="header" data-header>
+    <a href="/" class="logo">
+      <img src="./assets/images/logo-light.svg" width="156" height="32" alt="E-cook" class="logo-light">
+      <img src="./assets/images/logo-dark.svg" width="156" height="32" alt="E-cook" class="logo-dark">
+    </a>
+    <nav class="navbar">
+      <ul class="navbar-list">
+        <li><a href="./index.html" class="navbar-link title-small has-state">Home</a></li>
+        <li><a href="./recipes.html" class="navbar-link title-small has-state">Recipes</a></li>
+        <li><a href="./customPrzepisy.html" class="navbar-link title-small has-state active">My recipes</a></li>
+        <li><a href="./addNew.html" class="navbar-link title-small has-state">Add new</a></li>
+      </ul>
+    </nav>
+    <button class="icon-btn theme-switch has-state" aria-pressed="false" aria-label="Toggle light and dark theme" data-theme-btn>
+      <span class="material-symbols-outlined light-icon" aria-hidden="true">light_mode</span>
+      <span class="material-symbols-outlined dark-icon" aria-hidden="true">dark_mode</span>
+    </button>
+    <a href="./saved-recipes.html" class="btn btn-primary has-icon">
+      <span class="material-symbols-outlined" aria-hidden="true">book</span>
+      <span class="span">Saved Recipes</span>
+    </a>
+  </header>
+  <div class="database-data" id="recipeContainer"></div>
+  <script>
+    // Fetch data from PHP script
     fetch('customPrzepisy.php')
-        .then(response => response.json())
-        .then(data => {
-            // Отображение данных на странице
-            const recipeContainer = document.getElementById('recipeContainer');
-            data.forEach(recipe => {
-                // Создание ссылки для каждого рецепта
-                const recipeLink = document.createElement('a');
-                recipeLink.href = 'recipePage.php?id=' + recipe.id; // Предполагается, что у рецепта есть свойство "id"
-                
-                // Создание плитки для каждого рецепта
-                const recipeCard = document.createElement('div');
-                recipeCard.classList.add('recipe-card');
-                
-                // Установка текста плитки как название рецепта из базы данных
-                recipeCard.textContent = recipe.title; // Предполагается, что название рецепта находится в столбце "title"
-                
-                // Добавление плитки внутрь ссылки
-                recipeLink.appendChild(recipeCard);
-                
-                // Добавление ссылки (вместе с плиткой) в контейнер
-                recipeContainer.appendChild(recipeLink);
-            });
-        })
-        .catch(error => console.error('Ошибка получения данных:', error));
-</script>
+      .then(response => response.json())
+      .then(data => {
+        // Display data on the page
+        const recipeContainer = document.getElementById('recipeContainer');
+        data.forEach(recipe => {
+          // Create a link for each recipe
+          const recipeLink = document.createElement('a');
+          recipeLink.href = 'recipePage.php?id=' + recipe.id;
+          recipeLink.classList.add('data-link');
 
+          // Create a div for each data item
+          const dataItem = document.createElement('div');
+          dataItem.classList.add('data-item');
 
+          // Add an image
+          const recipeImage = document.createElement('img');
+          recipeImage.src = recipe.image_url; // Use the actual image URL from the database
+          recipeImage.alt = recipe.title;
+          dataItem.appendChild(recipeImage);
 
+          // Create a title element
+          const titleElement = document.createElement('div');
+          titleElement.classList.add('data-title');
+          titleElement.textContent = recipe.title;
+          dataItem.appendChild(titleElement);
 
+          // Create a time element with an icon
+          const timeElement = document.createElement('div');
+          timeElement.classList.add('data-time');
+          const clockIcon = document.createElement('span');
+          clockIcon.classList.add('material-symbols-outlined');
+          clockIcon.textContent = 'schedule'; // Clock icon
+          timeElement.appendChild(clockIcon);
+          const timeText = document.createElement('span');
+          timeText.textContent = recipe.time + ' minutes'; // Use the actual time from the database
+          timeElement.appendChild(timeText);
+          dataItem.appendChild(timeElement);
+
+          // Add the data item to the link
+          recipeLink.appendChild(dataItem);
+
+          // Add the link to the container
+          recipeContainer.appendChild(recipeLink);
+        });
+      })
+      .catch(error => console.error('Error fetching data:', error));
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const themeSwitch = document.querySelector('.theme-switch');
+      const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : 'dark';
+
+      document.body.setAttribute('data-theme', currentTheme);
+      themeSwitch.setAttribute('aria-pressed', currentTheme === 'dark' ? 'true' : 'false');
+
+      themeSwitch.addEventListener('click', function () {
+        let theme = document.body.getAttribute('data-theme');
+        if (theme === 'dark') {
+          document.body.setAttribute('data-theme', 'light');
+          localStorage.setItem('theme', 'light');
+          themeSwitch.setAttribute('aria-pressed', 'false');
+        } else {
+          document.body.setAttribute('data-theme', 'dark');
+          localStorage.setItem('theme', 'dark');
+          themeSwitch.setAttribute('aria-pressed', 'true');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
