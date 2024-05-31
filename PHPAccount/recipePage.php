@@ -275,7 +275,7 @@
         echo '<h2>Description</h2>';
         echo '</div>';
         echo '<p>' . $recipe['description'] . '</p>';
-        echo '<a href="./addNew.html" class="btn-edit">Edit</a>';  // Adding the Edit button here
+        echo '<a href="./edit_recipe.php" class="btn-edit">Edit</a>';  // Adding the Edit button here
         echo '</div>';
         echo '</div>';
         echo '</article>';
@@ -302,6 +302,7 @@
       });
     });
   </script>
+  
 </body>
 
 </html>
