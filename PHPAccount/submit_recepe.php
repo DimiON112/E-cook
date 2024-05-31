@@ -27,7 +27,7 @@ $recipeName = $conn->real_escape_string($_POST['recipeName']);
 $description = $conn->real_escape_string($_POST['description']);
 $time = $conn->real_escape_string($_POST['time']);
 $image_url = $conn->real_escape_string($_POST['image_url']);
-$admin_id = 27; // Используйте действительный admin_id из вашей таблицы
+$admin_id = 1; // Используйте действительный admin_id из вашей таблицы
 
 // Проверьте, существует ли admin_id
 $admin_check_query = "SELECT id FROM admin WHERE id = '$admin_id'";
