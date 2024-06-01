@@ -95,7 +95,6 @@
 </head>
 
 <body>
-  test4
   <header class="header" data-header>
     <a href="/" class="logo">
       <img src="./assets/images/logo-light.svg" width="156" height="32" alt="E-cook" class="logo-light">
@@ -118,56 +117,92 @@
       <span class="span">Saved Recipes</span>
     </a>
   </header>
+
+  <!-- Поле ввода для поиска и диапазон времени -->
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search recipes..." class="search-input">
+    <input type="number" id="minTimeInput" placeholder="Min time (min)" class="time-input">
+    <input type="number" id="maxTimeInput" placeholder="Max time (min)" class="time-input">
+  </div>
+
   <div class="database-data" id="recipeContainer"></div>
+
   <script>
     // Fetch data from PHP script
     fetch('customPrzepisy.php')
       .then(response => response.json())
       .then(data => {
-        // Display data on the page
-        const recipeContainer = document.getElementById('recipeContainer');
-        data.forEach(recipe => {
-          // Create a link for each recipe
-          const recipeLink = document.createElement('a');
-          recipeLink.href = 'recipePage.php?id=' + recipe.id;
-          recipeLink.classList.add('data-link');
+        let allRecipes = data;
+        displayRecipes(allRecipes);
 
-          // Create a div for each data item
-          const dataItem = document.createElement('div');
-          dataItem.classList.add('data-item');
+        const searchInput = document.getElementById('searchInput');
+        const minTimeInput = document.getElementById('minTimeInput');
+        const maxTimeInput = document.getElementById('maxTimeInput');
 
-          // Add an image
-          const recipeImage = document.createElement('img');
-          recipeImage.src = recipe.image_url; // Use the actual image URL from the database
-          recipeImage.alt = recipe.title;
-          dataItem.appendChild(recipeImage);
+        function filterRecipes() {
+          const query = searchInput.value.toLowerCase();
+          const minTime = parseInt(minTimeInput.value) || 0;
+          const maxTime = parseInt(maxTimeInput.value) || Infinity;
+          
+          const filteredRecipes = allRecipes.filter(recipe => {
+            const matchesTitle = recipe.title.toLowerCase().includes(query);
+            const matchesTime = recipe.time >= minTime && recipe.time <= maxTime;
+            return matchesTitle && matchesTime;
+          });
 
-          // Create a title element
-          const titleElement = document.createElement('div');
-          titleElement.classList.add('data-title');
-          titleElement.textContent = recipe.title;
-          dataItem.appendChild(titleElement);
+          displayRecipes(filteredRecipes);
+        }
 
-          // Create a time element with an icon
-          const timeElement = document.createElement('div');
-          timeElement.classList.add('data-time');
-          const clockIcon = document.createElement('span');
-          clockIcon.classList.add('material-symbols-outlined');
-          clockIcon.textContent = 'schedule'; // Clock icon
-          timeElement.appendChild(clockIcon);
-          const timeText = document.createElement('span');
-          timeText.textContent = recipe.time + ' minutes'; // Use the actual time from the database
-          timeElement.appendChild(timeText);
-          dataItem.appendChild(timeElement);
-
-          // Add the data item to the link
-          recipeLink.appendChild(dataItem);
-
-          // Add the link to the container
-          recipeContainer.appendChild(recipeLink);
-        });
+        searchInput.addEventListener('input', filterRecipes);
+        minTimeInput.addEventListener('input', filterRecipes);
+        maxTimeInput.addEventListener('input', filterRecipes);
       })
       .catch(error => console.error('Error fetching data:', error));
+
+    function displayRecipes(recipes) {
+      const recipeContainer = document.getElementById('recipeContainer');
+      recipeContainer.innerHTML = ''; // Clear previous recipes
+      recipes.forEach(recipe => {
+        // Create a link for each recipe
+        const recipeLink = document.createElement('a');
+        recipeLink.href = 'recipePage.php?id=' + recipe.id;
+        recipeLink.classList.add('data-link');
+
+        // Create a div for each data item
+        const dataItem = document.createElement('div');
+        dataItem.classList.add('data-item');
+
+        // Add an image
+        const recipeImage = document.createElement('img');
+        recipeImage.src = recipe.image_url; // Use the actual image URL from the database
+        recipeImage.alt = recipe.title;
+        dataItem.appendChild(recipeImage);
+
+        // Create a title element
+        const titleElement = document.createElement('div');
+        titleElement.classList.add('data-title');
+        titleElement.textContent = recipe.title;
+        dataItem.appendChild(titleElement);
+
+        // Create a time element with an icon
+        const timeElement = document.createElement('div');
+        timeElement.classList.add('data-time');
+        const clockIcon = document.createElement('span');
+        clockIcon.classList.add('material-symbols-outlined');
+        clockIcon.textContent = 'schedule'; // Clock icon
+        timeElement.appendChild(clockIcon);
+        const timeText = document.createElement('span');
+        timeText.textContent = recipe.time + ' minutes'; // Use the actual time from the database
+        timeElement.appendChild(timeText);
+        dataItem.appendChild(timeElement);
+
+        // Add the data item to the link
+        recipeLink.appendChild(dataItem);
+
+        // Add the link to the container
+        recipeContainer.appendChild(recipeLink);
+      });
+    }
 
     document.addEventListener('DOMContentLoaded', function () {
       const themeSwitch = document.querySelector('.theme-switch');
@@ -191,4 +226,5 @@
     });
   </script>
 </body>
+
 </html>
