@@ -1,30 +1,43 @@
 <?php
-// Подключение к базе данных
+// Podłącz do bazy danych
 $servername = "localhost";
 $username = "root";
-$password = ""; // Пароль по умолчанию пустой
+$password = ""; // Domyślne hasło puste
 $dbname = "login_db";
 
-// Создание подключения
+// Utwórz połączenie
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Проверка подключения
+// Sprawdź połączenie
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Запрос к базе данных
-$result = $conn->query("SELECT * FROM recepe");
+// Pobierz ID zalogowanego użytkownika (admin_id)
+session_start();
+$admin_id = $_SESSION['admin_id'];
 
-// Сохранение данных в массив
+// Zapytanie do bazy danych
+$sql = "SELECT recepe.*, 
+        CASE 
+          WHEN favorites.admin_id IS NOT NULL THEN 1 
+          ELSE 0 
+        END AS is_favorite 
+        FROM recepe 
+        LEFT JOIN favorites ON recepe.id = favorites.recepe_id AND favorites.admin_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $admin_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
 $data = array();
 while ($row = $result->fetch_assoc()) {
-    $data[] = $row; // Сохраняем всю информацию о рецепте, а не только заголовок
+    $data[] = $row;
 }
 
-// Закрытие соединения
+$stmt->close();
 $conn->close();
 
-// Возвращаем данные в формате JSON
+// Zwróć dane w formacie JSON
 echo json_encode($data);
 ?>

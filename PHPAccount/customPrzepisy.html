@@ -21,6 +21,8 @@
       --text-color: #ffffff;
       --item-background-color: #333;
       --item-text-color: #fff;
+      --favorite-color: #ff6f61;
+      --non-favorite-color: #ccc;
     }
 
     [data-theme="light"] {
@@ -57,6 +59,7 @@
       align-items: center;
       justify-content: center;
       transition: transform 0.3s ease;
+      position: relative;
     }
     .data-item:hover {
       transform: translateY(-10px);
@@ -87,9 +90,29 @@
     .data-link {
       text-decoration: none;
       color: inherit;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
     .navbar-link.active {
       border-bottom:  #ff6f61; /* Orange line for the active tab */
+    }
+    .add-to-favorites {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--non-favorite-color);
+      font-size: 1.5em;
+    }
+    .add-to-favorites .material-symbols-outlined {
+      font-size: 1.5em;
+    }
+    .add-to-favorites.active {
+      color: var(--favorite-color); /* Czerwony kolor dla ulubionych */
     }
   </style>
 </head>
@@ -118,7 +141,7 @@
     </a>
   </header>
 
-  <!-- Поле ввода для поиска и диапазон времени -->
+  <!-- Pole wyszukiwania i zakres czasu -->
   <div class="search-container">
     <input type="text" id="searchInput" placeholder="Search recipes..." class="search-input">
     <input type="number" id="minTimeInput" placeholder="Min time (min)" class="time-input">
@@ -128,7 +151,7 @@
   <div class="database-data" id="recipeContainer"></div>
 
   <script>
-    // Fetch data from PHP script
+    // Pobierz dane z PHP
     fetch('customPrzepisy.php')
       .then(response => response.json())
       .then(data => {
@@ -143,7 +166,7 @@
           const query = searchInput.value.toLowerCase();
           const minTime = parseInt(minTimeInput.value) || 0;
           const maxTime = parseInt(maxTimeInput.value) || Infinity;
-          
+
           const filteredRecipes = allRecipes.filter(recipe => {
             const matchesTitle = recipe.title.toLowerCase().includes(query);
             const matchesTime = recipe.time >= minTime && recipe.time <= maxTime;
@@ -161,48 +184,93 @@
 
     function displayRecipes(recipes) {
       const recipeContainer = document.getElementById('recipeContainer');
-      recipeContainer.innerHTML = ''; // Clear previous recipes
+      recipeContainer.innerHTML = ''; // Wyczyść poprzednie przepisy
       recipes.forEach(recipe => {
-        // Create a link for each recipe
+        // Utwórz div dla każdego elementu danych
+        const dataItem = document.createElement('div');
+        dataItem.classList.add('data-item');
+
+        // Utwórz link dla przepisu
         const recipeLink = document.createElement('a');
         recipeLink.href = 'recipePage.php?id=' + recipe.id;
         recipeLink.classList.add('data-link');
 
-        // Create a div for each data item
-        const dataItem = document.createElement('div');
-        dataItem.classList.add('data-item');
-
-        // Add an image
+        // Dodaj elementy do linku
         const recipeImage = document.createElement('img');
-        recipeImage.src = recipe.image_url; // Use the actual image URL from the database
+        recipeImage.src = recipe.image_url;
         recipeImage.alt = recipe.title;
-        dataItem.appendChild(recipeImage);
+        recipeLink.appendChild(recipeImage);
 
-        // Create a title element
         const titleElement = document.createElement('div');
         titleElement.classList.add('data-title');
         titleElement.textContent = recipe.title;
-        dataItem.appendChild(titleElement);
+        recipeLink.appendChild(titleElement);
 
-        // Create a time element with an icon
         const timeElement = document.createElement('div');
         timeElement.classList.add('data-time');
         const clockIcon = document.createElement('span');
         clockIcon.classList.add('material-symbols-outlined');
-        clockIcon.textContent = 'schedule'; // Clock icon
+        clockIcon.textContent = 'schedule';
         timeElement.appendChild(clockIcon);
         const timeText = document.createElement('span');
-        timeText.textContent = recipe.time + ' minutes'; // Use the actual time from the database
+        timeText.textContent = recipe.time + ' minutes';
         timeElement.appendChild(timeText);
-        dataItem.appendChild(timeElement);
+        recipeLink.appendChild(timeElement);
 
-        // Add the data item to the link
-        recipeLink.appendChild(dataItem);
+        // Dodaj link do kontenera
+        dataItem.appendChild(recipeLink);
 
-        // Add the link to the container
-        recipeContainer.appendChild(recipeLink);
+        // Dodaj przycisk "Add to Favorites"
+        const favoriteButton = document.createElement('button');
+        favoriteButton.classList.add('add-to-favorites');
+        favoriteButton.setAttribute('data-recipe-id', recipe.id);
+        favoriteButton.innerHTML = '<span class="material-symbols-outlined">bookmark</span>';
+
+        // Sprawdź, czy przepis jest ulubiony
+        if (recipe.is_favorite) {
+          favoriteButton.classList.add('active');
+        }
+
+        dataItem.appendChild(favoriteButton);
+
+        // Dodaj dataItem do kontenera
+        recipeContainer.appendChild(dataItem);
       });
     }
+
+    // Funkcja do dodawania do ulubionych
+    function addToFavorites(recipeId, button) {
+      console.log('Adding to favorites: ', recipeId);
+      fetch('add_to_favorites.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ recepe_id: recipeId })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Response from server: ', data);
+        if (data.success) {
+          alert('Recipe added to favorites!');
+          button.classList.add('active'); // Dodaj klasę aktywną do przycisku
+        } else {
+          alert('Failed to add recipe to favorites. Error: ' + data.error);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+
+    // Obsługa kliknięcia przycisku "Add to Favorites"
+    document.addEventListener('click', function(event) {
+      if (event.target.closest('.add-to-favorites')) {
+        event.stopPropagation(); // Zapobiegaj propagacji zdarzenia kliknięcia
+        const button = event.target.closest('.add-to-favorites');
+        const recipeId = button.getAttribute('data-recipe-id');
+        console.log('Button clicked: ', recipeId); // Dodaj logowanie
+        addToFavorites(recipeId, button);
+      }
+    });
 
     document.addEventListener('DOMContentLoaded', function () {
       const themeSwitch = document.querySelector('.theme-switch');
