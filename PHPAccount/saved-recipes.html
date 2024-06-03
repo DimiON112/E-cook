@@ -38,6 +38,8 @@
       justify-content: center;
       transition: transform 0.3s ease;
       position: relative;
+      text-decoration: none;
+      color: inherit;
     }
 
     .saved-recipe-page .data-item:hover {
@@ -149,18 +151,19 @@
         .then(data => {
           const recipeContainer = document.querySelector('[data-saved-recipe-container]');
           data.forEach(recipe => {
-            const dataItem = document.createElement('div');
-            dataItem.classList.add('data-item');
+            const recipeLink = document.createElement('a');
+            recipeLink.href = `recipePage.php?id=${recipe.id}`;
+            recipeLink.classList.add('data-item');
 
             const recipeImage = document.createElement('img');
             recipeImage.src = recipe.image_url;
             recipeImage.alt = recipe.title;
-            dataItem.appendChild(recipeImage);
+            recipeLink.appendChild(recipeImage);
 
             const titleElement = document.createElement('div');
             titleElement.classList.add('data-title');
             titleElement.textContent = recipe.title;
-            dataItem.appendChild(titleElement);
+            recipeLink.appendChild(titleElement);
 
             const timeElement = document.createElement('div');
             timeElement.classList.add('data-time');
@@ -171,14 +174,14 @@
             const timeText = document.createElement('span');
             timeText.textContent = recipe.time + ' minutes';
             timeElement.appendChild(timeText);
-            dataItem.appendChild(timeElement);
+            recipeLink.appendChild(timeElement);
 
             const favoriteButton = document.createElement('button');
             favoriteButton.classList.add('add-to-favorites');
             favoriteButton.innerHTML = '<span class="material-symbols-outlined">bookmark</span>';
-            dataItem.appendChild(favoriteButton);
+            recipeLink.appendChild(favoriteButton);
 
-            recipeContainer.appendChild(dataItem);
+            recipeContainer.appendChild(recipeLink);
           });
         })
         .catch(error => console.error('Error fetching favorites:', error));
