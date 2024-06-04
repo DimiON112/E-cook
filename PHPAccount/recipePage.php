@@ -21,6 +21,8 @@
       --text-color: #ffffff;
       --card-background-color: #333;
       --card-text-color: #fff;
+      --favorite-color: #ff6f61; /* Pomarańczowy kolor dla ulubionych */
+      --non-favorite-color: #ccc; /* Kolor dla nieulubionych */
     }
 
     [data-theme="light"] {
@@ -164,7 +166,7 @@
     }
 
     .btn-edit {
-      background-color: hsl(11, 87%, 59%);
+      background-color: var(--favorite-color);
       color: #fff;
       padding: 15px 30px;
       border: none;
@@ -184,6 +186,30 @@
 
     .theme-switch {
       margin-left: auto;
+    }
+
+    .btn-save {
+      background-color: var(--non-favorite-color);
+      color: var(--text-color);
+      padding: 15px 30px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-decoration: none;
+      font-size: 18px;
+      align-self: flex-start; /* Ustawienie przycisku wyżej */
+      margin-top: -0px; /* Dodaj margines u góry */
+    }
+
+    .btn-save.active {
+      background-color: var(--favorite-color);
+      color: #fff;
+    }
+
+    .btn-save:hover {
+      background-color: var(--favorite-color);
+      color: #fff;
     }
   </style>
 </head>
@@ -224,6 +250,7 @@
     <h1 class="recipe-title">Recipe Details</h1>
     <div class="recipes">
       <?php
+      
       $servername = "localhost";
       $username = "root";
       $password = "";
@@ -235,7 +262,18 @@
         die("Connection failed: " . $conn->connect_error);
       }
 
+      $admin_id = isset($_SESSION['admin_id']) ? $_SESSION['admin_id'] : null;
       $recipeId = $_GET['id'];
+
+      // Sprawdź, czy przepis jest w ulubionych
+      $favorite_query = "SELECT * FROM favorites WHERE admin_id = ? AND recepe_id = ?";
+      $stmt = $conn->prepare($favorite_query);
+      $stmt->bind_param("ii", $admin_id, $recipeId);
+      $stmt->execute();
+      $favorite_result = $stmt->get_result();
+      $is_favorite = $favorite_result->num_rows > 0;
+      $stmt->close();
+
       $recipe_query = "SELECT * FROM recepe WHERE id = $recipeId";
       $recipe_result = $conn->query($recipe_query);
 
@@ -275,7 +313,8 @@
         echo '<h2>Description</h2>';
         echo '</div>';
         echo '<p>' . $recipe['description'] . '</p>';
-        echo '<a href="./edit_recipe.php" class="btn-edit">Edit</a>';  // Adding the Edit button here
+        echo '<a href="./edit_recipe.php" class="btn-edit">Edit</a>';
+        echo '<button class="btn-save ' . ($is_favorite ? 'active' : '') . '" id="saveButton" data-recipe-id="' . $recipeId . '">' . ($is_favorite ? 'Unsave' : 'Save') . '</button>';
         echo '</div>';
         echo '</div>';
         echo '</article>';
@@ -300,9 +339,38 @@
         localStorage.setItem('theme', newTheme);
         themeBtn.setAttribute('aria-pressed', newTheme === 'dark' ? 'true' : 'false');
       });
+
+      // Obsługa kliknięcia przycisku "Save/Unsave"
+      const saveButton = document.getElementById('saveButton');
+      saveButton.addEventListener('click', function () {
+        const recipeId = this.getAttribute('data-recipe-id');
+        const action = this.classList.contains('active') ? 'remove_from_favorites.php' : 'add_to_favorites.php';
+
+        fetch(action, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ recepe_id: recipeId })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            if (this.classList.contains('active')) {
+              this.classList.remove('active');
+              this.textContent = 'Save';
+            } else {
+              this.classList.add('active');
+              this.textContent = 'Unsave';
+            }
+          } else {
+            alert('Failed to update favorite status. Error: ' + data.error);
+          }
+        })
+        .catch(error => console.error('Error:', error));
+      });
     });
   </script>
-  
 </body>
 
 </html>

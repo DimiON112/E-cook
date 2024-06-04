@@ -261,14 +261,41 @@
       .catch(error => console.error('Error:', error));
     }
 
-    // Obsługa kliknięcia przycisku "Add to Favorites"
+    // Funkcja do usuwania z ulubionych
+    function removeFromFavorites(recipeId, button) {
+      console.log('Removing from favorites: ', recipeId);
+      fetch('remove_from_favorites.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ recepe_id: recipeId })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Response from server: ', data);
+        if (data.success) {
+          alert('Recipe removed from favorites!');
+          button.classList.remove('active'); // Usuń klasę aktywną z przycisku
+        } else {
+          alert('Failed to remove recipe from favorites. Error: ' + data.error);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+
+    // Obsługa kliknięcia przycisku "Add to Favorites" i "Remove from Favorites"
     document.addEventListener('click', function(event) {
       if (event.target.closest('.add-to-favorites')) {
         event.stopPropagation(); // Zapobiegaj propagacji zdarzenia kliknięcia
         const button = event.target.closest('.add-to-favorites');
         const recipeId = button.getAttribute('data-recipe-id');
         console.log('Button clicked: ', recipeId); // Dodaj logowanie
-        addToFavorites(recipeId, button);
+        if (button.classList.contains('active')) {
+          removeFromFavorites(recipeId, button);
+        } else {
+          addToFavorites(recipeId, button);
+        }
       }
     });
 

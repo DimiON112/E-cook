@@ -86,6 +86,11 @@
     .saved-recipe-page .remove-from-favorites .material-symbols-outlined {
       font-size: 1.5em;
     }
+
+    .saved-recipe-page .add-to-favorites.active,
+    .saved-recipe-page .remove-from-favorites.active {
+      color: #ff6f61; /* Pomarańczowy kolor dla ulubionych */
+    }
   </style>
 </head>
 
@@ -151,9 +156,12 @@
         .then(data => {
           const recipeContainer = document.querySelector('[data-saved-recipe-container]');
           data.forEach(recipe => {
+            const dataItem = document.createElement('div');
+            dataItem.classList.add('data-item');
+
             const recipeLink = document.createElement('a');
             recipeLink.href = `recipePage.php?id=${recipe.id}`;
-            recipeLink.classList.add('data-item');
+            recipeLink.classList.add('data-link');
 
             const recipeImage = document.createElement('img');
             recipeImage.src = recipe.image_url;
@@ -177,14 +185,52 @@
             recipeLink.appendChild(timeElement);
 
             const favoriteButton = document.createElement('button');
-            favoriteButton.classList.add('add-to-favorites');
+            favoriteButton.classList.add('remove-from-favorites', 'active');
+            favoriteButton.setAttribute('data-recipe-id', recipe.id);
             favoriteButton.innerHTML = '<span class="material-symbols-outlined">bookmark</span>';
-            recipeLink.appendChild(favoriteButton);
 
-            recipeContainer.appendChild(recipeLink);
+            dataItem.appendChild(recipeLink);
+            dataItem.appendChild(favoriteButton);
+            recipeContainer.appendChild(dataItem);
           });
         })
         .catch(error => console.error('Error fetching favorites:', error));
+    });
+
+    // Funkcja do usuwania z ulubionych
+    function removeFromFavorites(recipeId, button) {
+      console.log('Removing from favorites: ', recipeId);
+      fetch('remove_from_favorites.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ recepe_id: recipeId })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Response from server: ', data);
+        if (data.success) {
+          alert('Recipe removed from favorites!');
+          button.classList.remove('active'); // Usuń klasę aktywną z przycisku
+          button.closest('.data-item').remove(); // Usuń przepis z widoku
+        } else {
+          alert('Failed to remove recipe from favorites. Error: ' + data.error);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+
+    // Obsługa kliknięcia przycisku "Remove from Favorites"
+    document.addEventListener('click', function(event) {
+      if (event.target.closest('.remove-from-favorites')) {
+        event.stopPropagation(); // Zapobiegaj propagacji zdarzenia kliknięcia
+        event.preventDefault(); // Zapobiegaj otwieraniu linku
+        const button = event.target.closest('.remove-from-favorites');
+        const recipeId = button.getAttribute('data-recipe-id');
+        console.log('Button clicked: ', recipeId); // Dodaj logowanie
+        removeFromFavorites(recipeId, button);
+      }
     });
   </script>
 
