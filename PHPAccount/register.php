@@ -38,15 +38,12 @@ include('partials/header.php');
                 <input type="password" id="password" name="password" placeholder="Enter your Password" required>
             </div>
 
-
-
             <!--Submit Button-->
             <div class="row">
                 
-                <input type="submit" id="submitBtn" name="submit"  value="Login">
+                <input type="submit" id="submitBtn" name="submit"  value="Register">
                 <span class="registerLink">Have an account already? <a href="index.php"> Login</a></span>
             </div>
-
 
            </div>
 
@@ -77,19 +74,22 @@ if(isset($_POST['submit'])){
 
     $res=mysqli_query($conn, $sql);
     if($res==true){
+        // Pobierz ID nowo utworzonego użytkownika
+        $admin_id = mysqli_insert_id($conn);
+        // Ustaw admin_id w sesji
+        $_SESSION['admin_id'] = $admin_id;
+
         $_SESSION['accountCreated']='<span class="addedAccount">Account '.$userName.' created!</span>' ;
 
         header('location:' .SITEURL. 'index.php');
         exit();
     }
-
     else{
         $_SESSION['unSuccessful']='<span class="fail">Nie udało się utworzyć konta dla '.$userName.'!</span>' ;
 
         header('location:' .SITEURL. 'register.php');
         exit();
     }
-
 }
 
 ?>
