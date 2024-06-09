@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -156,22 +155,19 @@
         .then(data => {
           const recipeContainer = document.querySelector('[data-saved-recipe-container]');
           data.forEach(recipe => {
-            const dataItem = document.createElement('div');
+            const dataItem = document.createElement('a'); // Zmieniamy div na a
             dataItem.classList.add('data-item');
-
-            const recipeLink = document.createElement('a');
-            recipeLink.href = `recipePage.php?id=${recipe.id}`;
-            recipeLink.classList.add('data-link');
+            dataItem.href = `recipePage.php?id=${recipe.id}`; // Dodajemy link do przepisu
 
             const recipeImage = document.createElement('img');
             recipeImage.src = recipe.image_url;
             recipeImage.alt = recipe.title;
-            recipeLink.appendChild(recipeImage);
+            dataItem.appendChild(recipeImage);
 
             const titleElement = document.createElement('div');
             titleElement.classList.add('data-title');
             titleElement.textContent = recipe.title;
-            recipeLink.appendChild(titleElement);
+            dataItem.appendChild(titleElement);
 
             const timeElement = document.createElement('div');
             timeElement.classList.add('data-time');
@@ -182,14 +178,13 @@
             const timeText = document.createElement('span');
             timeText.textContent = recipe.time + ' minutes';
             timeElement.appendChild(timeText);
-            recipeLink.appendChild(timeElement);
+            dataItem.appendChild(timeElement);
 
             const favoriteButton = document.createElement('button');
             favoriteButton.classList.add('remove-from-favorites', 'active');
             favoriteButton.setAttribute('data-recipe-id', recipe.id);
             favoriteButton.innerHTML = '<span class="material-symbols-outlined">bookmark</span>';
 
-            dataItem.appendChild(recipeLink);
             dataItem.appendChild(favoriteButton);
             recipeContainer.appendChild(dataItem);
           });
