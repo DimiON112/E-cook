@@ -21,18 +21,70 @@ if ($conn->connect_error) {
 
 $recipeId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Handle form submission
+    $recipeId = intval($_POST['recipeId']);
+    $title = $conn->real_escape_string($_POST['recipeName']);
+    $description = $conn->real_escape_string($_POST['description']);
+    $time = $conn->real_escape_string($_POST['time']);
+    $imageUrl = $conn->real_escape_string($_POST['image_url']);
+    $ingredients = $_POST['ingredient'];
+
+    // Update the recipe
+    $sql = "UPDATE recepe SET title='$title', description='$description', time='$time', image_url='$imageUrl' WHERE id=$recipeId";
+    if ($conn->query($sql) === TRUE) {
+        // Update ingredients
+        $existingIngredientsQuery = "SELECT id, name FROM item WHERE recepe_id = $recipeId";
+        $existingIngredientsResult = $conn->query($existingIngredientsQuery);
+        $existingIngredients = [];
+        while ($row = $existingIngredientsResult->fetch_assoc()) {
+            $existingIngredients[$row['id']] = $row['name'];
+        }
+
+        foreach ($ingredients as $index => $ingredient) {
+            if (isset($existingIngredients[$index])) {
+                // Update existing ingredient
+                $ingredientId = intval($index);
+                $ingredientName = $conn->real_escape_string($ingredient);
+                $updateSql = "UPDATE item SET name='$ingredientName' WHERE id=$ingredientId";
+                $conn->query($updateSql);
+            } else {
+                // Insert new ingredient
+                $ingredientName = $conn->real_escape_string($ingredient);
+                $insertSql = "INSERT INTO item (recepe_id, name) VALUES ($recipeId, '$ingredientName')";
+                $conn->query($insertSql);
+            }
+        }
+
+        // Remove deleted ingredients
+        foreach ($existingIngredients as $id => $name) {
+            if (!in_array($id, array_keys($ingredients))) {
+                $deleteSql = "DELETE FROM item WHERE id=$id";
+                $conn->query($deleteSql);
+            }
+        }
+
+        echo "Recipe updated successfully";
+    } else {
+        echo "Error updating recipe: " . $conn->error;
+    }
+
+    $conn->close();
+    exit();
+}
+
 if ($recipeId > 0) {
     $sql = "SELECT title, description, time, image_url FROM recepe WHERE id = $recipeId";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
         $recipe = $result->fetch_assoc();
-        
-        $ingredientsSql = "SELECT name FROM item WHERE recepe_id = $recipeId";
+
+        $ingredientsSql = "SELECT id, name FROM item WHERE recepe_id = $recipeId";
         $ingredientsResult = $conn->query($ingredientsSql);
         $ingredients = [];
         while ($row = $ingredientsResult->fetch_assoc()) {
-            $ingredients[] = $row['name'];
+            $ingredients[$row['id']] = $row['name'];
         }
     } else {
         echo "Recipe not found";
@@ -42,24 +94,12 @@ if ($recipeId > 0) {
     echo "Invalid request";
     exit();
 }
-$sql = "UPDATE recepe SET title='$title', description='$description', time='$time', image_url='$imageUrl' WHERE id=$recipeId";
-    if ($conn->query($sql) === TRUE) {
-        echo "Recipe updated successfully";
-    } else {
-        echo "Error updating recipe: " . $conn->error;
-    }
-
-    // Удаление старых ингредиентов
-    $sql = "DELETE FROM item WHERE recepe_id=$recipeId";
-    if ($conn->query($sql) !== TRUE) {
-        echo "Error deleting old ingredients: " . $conn->error;
-    }
 
 $conn->close();
 ?>
 
 <section class="recipe-form-section">
-  <form action="submit_recepe.php" method="post" class="recipe-form">
+  <form action="edit_recipe.php?id=<?php echo $recipeId; ?>" method="post" class="recipe-form">
     <input type="hidden" id="recipeId" name="recipeId" value="<?php echo $recipeId; ?>">
     <div class="form-group">
       <label for="recipeName">Recipe Name:</label>
@@ -79,11 +119,13 @@ $conn->close();
     </div>
     <div class="ingredients-container" id="ingredientsContainer">
       <?php
-      foreach ($ingredients as $index => $ingredient) {
+      $index = 0;
+      foreach ($ingredients as $id => $ingredient) {
           echo '<div class="ingredient-row">';
-          echo '<label for="ingredient' . ($index + 1) . '">Ingredient ' . ($index + 1) . ':</label>';
-          echo '<input type="text" id="ingredient' . ($index + 1) . '" name="ingredient[]" value="' . htmlspecialchars($ingredient) . '" required>';
+          echo '<label for="ingredient' . $index . '">Ingredient ' . ($index + 1) . ':</label>';
+          echo '<input type="text" id="ingredient' . $index . '" name="ingredient[' . $id . ']" value="' . htmlspecialchars($ingredient) . '" required>';
           echo '</div>';
+          $index++;
       }
       ?>
     </div>
@@ -102,14 +144,14 @@ $conn->close();
     let ingredientIndex = <?php echo count($ingredients); ?>;
 
     addIngredientButton.addEventListener('click', function () {
-      ingredientIndex++;
       const newIngredientRow = document.createElement('div');
-      newIngredientRow.classList.add('ingredientRow');
+      newIngredientRow.classList.add('ingredient-row');
       newIngredientRow.innerHTML = `
-          <label for="ingredient${ingredientIndex}">Ingredient ${ingredientIndex}:</label>
-          <input type="text" id="ingredient${ingredientIndex}" name="ingredient[]" required>
+          <label for="ingredient${ingredientIndex}">Ingredient ${ingredientIndex + 1}:</label>
+          <input type="text" id="ingredient${ingredientIndex}" name="ingredient[new_${ingredientIndex}]" required>
       `;
       ingredientsContainer.appendChild(newIngredientRow);
+      ingredientIndex++;
     });
   });
 </script>
